@@ -1,0 +1,77 @@
+# Railway.toml - Zero-Secrets Railway Deployment Configuration
+# This file configures Railway deployment with cost guardrails and free-tier protection
+
+[build]
+builder = "nixpacks"
+buildCommand = "pip install -r requirements.txt"
+
+[deploy]
+startCommand = "python main.py"
+healthcheckPath = "/"
+healthcheckTimeout = 300
+restartPolicyType = "never"
+
+# Cost Protection: Minimal resource allocation
+[deploy.resources]
+# Force minimal instance size to stay within free tier
+memoryLimit = "512Mi"
+cpuLimit = "0.5"
+
+# Environment variables for Railway deployment
+[env]
+# Core configuration
+PYTHONUNBUFFERED = "1"
+PYTHON_VERSION = "3.10"
+
+# Disable GPU acceleration to reduce costs
+CUDA_VISIBLE_DEVICES = "-1"
+
+# OpenAI API - Stubbed by default for zero-secrets deployment
+# Users must set this via Railway dashboard for full functionality
+OPENAI_API = "DISABLED"
+
+# Railway-specific settings
+RAILWAY_ENVIRONMENT = "production"
+PORT = "8080"
+
+# Cost guardrails
+MAX_PROCESSING_TIME = "300"
+ENABLE_COST_MONITORING = "true"
+FREE_TIER_MODE = "true"
+
+# Feature flags for zero-secrets mode
+STUB_OPENAI = "true"
+MANUAL_HIGHLIGHT_MODE = "true"
+
+[nixpacks]
+# Nixpacks configuration for system dependencies
+[nixpacks.phases.setup]
+aptPkgs = ["ffmpeg", "libsm6", "libxext6", "libxrender-dev", "libgomp1"]
+
+[nixpacks.phases.install]
+cmds = ["pip install --no-cache-dir -r requirements.txt"]
+
+# Cost monitoring hooks (placeholder for future Railway API integration)
+[monitoring]
+enabled = true
+free_tier_limit_percent = 80
+auto_shutdown_on_breach = true
+maintenance_mode_trigger = "free_tier_exceeded"
+
+# Multi-host failover configuration (not active by default)
+[failover]
+enabled = false
+primary_host = "railway"
+backup_hosts = ["coolify", "hostinger_vpn"]
+
+# Coolify migration markers
+[coolify_support]
+compatible = true
+migration_guide = "COOLIFY_MIGRATION.md"
+docker_support = true
+
+# Hostinger VPN tunneling markers
+[hostinger_vpn]
+enabled = false
+configuration_guide = "COOLIFY_SUPPORT.md"
+tunnel_port = "8080"

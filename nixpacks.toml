@@ -1,0 +1,46 @@
+# Nixpacks configuration for Railway deployment
+# Optimized for minimal resource usage and cost protection
+
+[phases.setup]
+# Essential system dependencies
+aptPkgs = [
+    "ffmpeg",           # Video processing
+    "libsm6",           # OpenCV dependency
+    "libxext6",         # OpenCV dependency
+    "libxrender-dev",   # OpenCV dependency
+    "libgomp1",         # OpenMP for parallel processing
+    "libopencv-dev"     # OpenCV development files
+]
+
+[phases.install]
+# Install Python dependencies with minimal cache
+cmds = [
+    "pip install --upgrade pip setuptools wheel",
+    "pip install --no-cache-dir -r requirements.txt"
+]
+
+[phases.build]
+# No build step needed for Python scripts
+cmds = []
+
+[start]
+# Start command for Railway
+cmd = "python main.py"
+
+[variables]
+# Python configuration
+PYTHONUNBUFFERED = "1"
+PYTHON_VERSION = "3.10"
+
+# Disable GPU to reduce resource usage
+CUDA_VISIBLE_DEVICES = "-1"
+TORCH_DEVICE = "cpu"
+
+# Cost optimization flags
+OMP_NUM_THREADS = "2"
+MKL_NUM_THREADS = "2"
+NUMEXPR_NUM_THREADS = "2"
+
+# Memory optimization
+MALLOC_TRIM_THRESHOLD_ = "100000"
+MALLOC_MMAP_THRESHOLD_ = "100000"
