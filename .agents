@@ -119,6 +119,7 @@
   "agent_notes": {
     "purpose": "This file is consumed by a separate secrets-provisioning agent",
     "workflow": "1. Parse this file, 2. Prompt user for real values, 3. Update local master.secrets.json, 4. Generate .env file",
-    "security": "Never commit real secrets to version control"
+    "security": "Never commit real secrets to version control",
+    "application_config": "See app.config.json for monitoring, failover, and cost protection settings"
   }
 }

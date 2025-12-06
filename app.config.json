@@ -1,0 +1,69 @@
+{
+  "app_name": "AI-Youtube-Shorts-Generator",
+  "version": "1.0.0",
+  "deployment": {
+    "primary_platform": "railway",
+    "backup_platforms": ["coolify", "hostinger_vpn"]
+  },
+  "monitoring": {
+    "enabled": true,
+    "free_tier_limit_percent": 80,
+    "auto_shutdown_on_breach": true,
+    "maintenance_mode_trigger": "free_tier_exceeded",
+    "check_interval_minutes": 60,
+    "alert_thresholds": {
+      "warning": 70,
+      "critical": 80,
+      "emergency": 95
+    }
+  },
+  "failover": {
+    "enabled": false,
+    "primary_host": "railway",
+    "backup_hosts": ["coolify", "hostinger_vpn"],
+    "automatic_failover": false,
+    "manual_migration_only": true
+  },
+  "coolify_support": {
+    "compatible": true,
+    "migration_guide": "COOLIFY_MIGRATION.md",
+    "docker_support": true,
+    "deployment_ready": true,
+    "configuration_scaffolded": true
+  },
+  "hostinger_vpn": {
+    "enabled": false,
+    "configuration_guide": "COOLIFY_SUPPORT.md",
+    "tunnel_port": 8080,
+    "setup_required": true,
+    "status": "documented"
+  },
+  "cost_protection": {
+    "railway_free_tier_limits": {
+      "monthly_hours": 500,
+      "egress_gb": 100,
+      "build_minutes": 100
+    },
+    "resource_constraints": {
+      "memory_limit_mb": 512,
+      "cpu_limit": 0.5,
+      "max_processing_time_seconds": 300
+    },
+    "maintenance_page": "maintenance.html"
+  },
+  "features": {
+    "zero_secrets_mode": true,
+    "manual_highlight_selection": true,
+    "ai_powered_highlights": true,
+    "cost_monitoring": true,
+    "auto_shutdown": true
+  },
+  "integrations": {
+    "openai": {
+      "required": false,
+      "fallback_mode": "manual",
+      "env_var": "OPENAI_API",
+      "stub_value": "DISABLED"
+    }
+  }
+}

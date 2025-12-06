@@ -27,20 +27,5 @@ cmds = []
 # Start command for Railway
 cmd = "python main.py"
 
-[variables]
-# Python configuration
-PYTHONUNBUFFERED = "1"
-PYTHON_VERSION = "3.10"
-
-# Disable GPU to reduce resource usage
-CUDA_VISIBLE_DEVICES = "-1"
-TORCH_DEVICE = "cpu"
-
-# Cost optimization flags
-OMP_NUM_THREADS = "2"
-MKL_NUM_THREADS = "2"
-NUMEXPR_NUM_THREADS = "2"
-
-# Memory optimization
-MALLOC_TRIM_THRESHOLD_ = "100000"
-MALLOC_MMAP_THRESHOLD_ = "100000"
+# Note: Runtime environment variables should be set in railway.toml's [env] section
+# or via Railway dashboard, not in nixpacks.toml which is for build-time configuration

@@ -43,6 +43,12 @@ FREE_TIER_MODE = "true"
 STUB_OPENAI = "true"
 MANUAL_HIGHLIGHT_MODE = "true"
 
+# CPU/Memory optimization
+OMP_NUM_THREADS = "2"
+MKL_NUM_THREADS = "2"
+NUMEXPR_NUM_THREADS = "2"
+TORCH_DEVICE = "cpu"
+
 [nixpacks]
 # Nixpacks configuration for system dependencies
 [nixpacks.phases.setup]
@@ -51,27 +57,7 @@ aptPkgs = ["ffmpeg", "libsm6", "libxext6", "libxrender-dev", "libgomp1"]
 [nixpacks.phases.install]
 cmds = ["pip install --no-cache-dir -r requirements.txt"]
 
-# Cost monitoring hooks (placeholder for future Railway API integration)
-[monitoring]
-enabled = true
-free_tier_limit_percent = 80
-auto_shutdown_on_breach = true
-maintenance_mode_trigger = "free_tier_exceeded"
-
-# Multi-host failover configuration (not active by default)
-[failover]
-enabled = false
-primary_host = "railway"
-backup_hosts = ["coolify", "hostinger_vpn"]
-
-# Coolify migration markers
-[coolify_support]
-compatible = true
-migration_guide = "COOLIFY_MIGRATION.md"
-docker_support = true
-
-# Hostinger VPN tunneling markers
-[hostinger_vpn]
-enabled = false
-configuration_guide = "COOLIFY_SUPPORT.md"
-tunnel_port = "8080"
+# Note: Custom monitoring, failover, and migration configurations are maintained
+# in the .agents file and application-level configuration. Railway does not
+# natively support these custom sections, but they are preserved here as
+# documentation and for use by the cost_monitor.py script and migration tools.
