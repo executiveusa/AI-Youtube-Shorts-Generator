@@ -40,6 +40,12 @@ def validate_toml_file(filepath, description):
     """Validate TOML file syntax"""
     try:
         import toml
+    except ImportError:
+        print(f"⚠ {description} validation skipped: toml package not installed")
+        print("  Install with: pip install toml")
+        return True, None  # Don't fail validation if toml not available
+    
+    try:
         with open(filepath, 'r') as f:
             data = toml.load(f)
         print(f"✓ {description} is valid TOML")
