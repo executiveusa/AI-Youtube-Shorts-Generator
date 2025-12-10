@@ -60,11 +60,31 @@ OPENAI_API=your_openai_api_key_here
 
 ## Usage
 
+### Local Development
+
 1. Ensure your `.env` file is correctly set up with your OpenAI API key.
 2. Run the main script and enter the desired YouTube URL when prompted:
    ```bash
    python main.py
    ```
+
+### Railway Deployment (Zero-Secrets Mode)
+
+Deploy instantly without API keys:
+
+```bash
+# Install Railway CLI
+npm install -g @railway/cli
+
+# Login and deploy
+railway login
+railway init
+railway up
+```
+
+**Note**: In zero-secrets mode, the app runs with manual highlight selection. Add your OpenAI API key in the Railway dashboard for full AI functionality.
+
+📚 **Full deployment guide**: See [RAILWAY_DEPLOYMENT.md](./RAILWAY_DEPLOYMENT.md)
 
 ## Contributing
 

@@ -1,0 +1,125 @@
+{
+  "project": "AI-Youtube-Shorts-Generator",
+  "description": "AI-powered YouTube shorts generator using GPT-4 and Whisper",
+  "version": "1.0.0",
+  "core": [
+    {
+      "name": "PYTHON_VERSION",
+      "description": "Python runtime version",
+      "format": "semver",
+      "default": "3.10",
+      "required": true,
+      "category": "runtime"
+    },
+    {
+      "name": "PORT",
+      "description": "HTTP server port for Railway deployment",
+      "format": "integer",
+      "default": "8080",
+      "required": false,
+      "category": "runtime"
+    }
+  ],
+  "optional": [
+    {
+      "name": "OPENAI_API",
+      "description": "OpenAI API key for GPT-4 language processing and highlight extraction",
+      "format": "sk-...xxxxx",
+      "placeholder": "sk-proj-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "default": "DISABLED",
+      "required": false,
+      "category": "ai_services",
+      "module": "LanguageTasks",
+      "fallback": "Manual highlight selection mode",
+      "cost_impact": "high"
+    }
+  ],
+  "required_secrets": [
+    {
+      "name": "OPENAI_API",
+      "purpose": "GPT-4 API access for video highlight extraction",
+      "modules_using": [
+        "Components/LanguageTasks.py"
+      ],
+      "operations": [
+        "GetHighlight - Extract interesting video segments",
+        "GPT-4o model inference for content analysis"
+      ],
+      "fallback_behavior": "Stub mode - prompts user for manual start/end timestamps",
+      "security_level": "high",
+      "rotation_recommended": true,
+      "estimated_monthly_cost": "$10-50 depending on usage"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "properties": {
+      "OPENAI_API": {
+        "type": "string",
+        "pattern": "^sk-[a-zA-Z0-9-_]+$",
+        "description": "OpenAI API key starting with 'sk-'",
+        "sensitive": true
+      },
+      "PORT": {
+        "type": "integer",
+        "minimum": 1024,
+        "maximum": 65535,
+        "default": 8080
+      },
+      "PYTHON_VERSION": {
+        "type": "string",
+        "enum": ["3.8", "3.9", "3.10", "3.11"],
+        "default": "3.10"
+      }
+    },
+    "required": []
+  },
+  "deployment": {
+    "railway": {
+      "service_type": "web",
+      "startup_command": "python main.py",
+      "health_check": false,
+      "auto_scale": false,
+      "regions": ["us-west1"]
+    },
+    "coolify": {
+      "docker_support": true,
+      "buildpack": "nixpacks",
+      "health_check_path": "/health"
+    }
+  },
+  "dependencies": {
+    "system": [
+      "ffmpeg",
+      "opencv"
+    ],
+    "python": "requirements.txt"
+  },
+  "secrets_management": {
+    "local_file": "master.secrets.json",
+    "env_file": ".env",
+    "never_commit": [
+      ".env",
+      "master.secrets.json",
+      "*.key",
+      "*.pem"
+    ]
+  },
+  "cost_guardrails": {
+    "railway_free_tier": {
+      "monthly_hours": 500,
+      "egress_gb": 100,
+      "build_minutes": 100
+    },
+    "monitoring": {
+      "auto_shutdown_on_breach": true,
+      "maintenance_mode_trigger": "free_tier_80_percent"
+    }
+  },
+  "agent_notes": {
+    "purpose": "This file is consumed by a separate secrets-provisioning agent",
+    "workflow": "1. Parse this file, 2. Prompt user for real values, 3. Update local master.secrets.json, 4. Generate .env file",
+    "security": "Never commit real secrets to version control",
+    "application_config": "See app.config.json for monitoring, failover, and cost protection settings"
+  }
+}
